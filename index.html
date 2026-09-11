@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p><span id="teste" style="color:#008000; font-size: 30px;" onclick="" title="Texto">Text</span></p>
+    <p><span id="stop">PARAR ANIMAÇÃO</span></p>
+    <script>
+        // Variáveis
+        let target = document.getElementById('teste');
+        let stopper = document.getElementById('stop');
+
+        // Variáveis de controle
+        let running = false;
+        let requires = false;
+        let clicked = false;
+
+        // Estilos
+            // Target
+                target.style.transition = 'color 1s ease';
+                target.style.border = "1px black solid";
+            // Stopper
+                stopper.style.transition = 'background 1s ease';
+                stopper.style.border = "1px black solid";
+
+            // Eventos Stopper
+                // Função abstraída
+                function corMouse(func, cor) {
+                    stopper.style[func] = cor;
+                }
+                const aparecendoFundo = corMouse.bind(null, "background", "#FF0000");
+                const sumirFundo = corMouse.bind(null, "background", "");
+
+            stopper.addEventListener('mouseenter', aparecendoFundo);
+            stopper.addEventListener('mouseleave', sumirFundo);
+
+            stopper.addEventListener('click', () => {
+                // Caso já esteja clicado, volte
+                if (clicked) return;
+
+                    clicked = true;
+                    corMouse("background", "#008000");
+                    stopper.removeEventListener('mouseenter', aparecendoFundo);
+                    stopper.removeEventListener('mouseleave', sumirFundo);
+                        setTimeout(() => {
+                        stopper.addEventListener('mouseenter', aparecendoFundo);
+                        stopper.addEventListener('mouseleave', sumirFundo);
+                            if(stopper.matches(':hover')) {
+                            corMouse("background", "#FF0000");
+                            } else {
+                        corMouse("background", "");
+                    }
+                    clicked = false;
+                }, 2000);
+                requires = true;
+            })
+
+        // Criação de função lambda
+        function eventClickerInterval() {
+            // Retorno
+            if (running) return;
+            // Tempo indeterminado
+            let timer = setInterval(() => {
+                if (requires) {
+                    clearInterval(timer);
+                    running = false;
+                    requires = false;
+                    return;
+                } else {
+                    // Alterando estados
+                    requires = false;
+                    running = true;
+                    // Alterador de cores
+                        setTimeout(() => {
+                        target.style.color = '#FF0000';
+                            setTimeout(() => {
+                                target.style.color = 'green';
+                        }, 1000)
+                    }, 1000)
+                }
+            }, 2500);
+        }
+        // Captura de evento e execução da função
+        target.addEventListener('click', eventClickerInterval);
+    </script>
+</body>
+</html>
