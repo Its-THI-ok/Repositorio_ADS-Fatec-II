@@ -2,103 +2,86 @@
 nomes = [ "Ana", "Claudia", "Diego", "Diogo", "Elizia", "Fabricio", "Gabriella", "Marcelo", "Marcelly", "Tássia" ]
 medias = [ 8.5, 6.0, 4.5, 6.5, 9.5, 5.5, 8.0, 4.0, 9.0, 2.5]
 
-def Exibir_Alunos():
+def Show_Names():
     for nome in nomes:
         i = nomes.index(nome)
         print("\nID:", i, "\nAluno:\n", nome,"\nMédia:",medias[i],)
 
-def Retorno_Menu():
-    print("Escolhas as opções abaixo")
-    print("[A] Alterar\n[E] Excluir\n[M] Mostrar Nomes\n[S] Sair")
+def Menu():
+    print("Escolhas as opções abaixo\n[A] Alterar\n[E] Excluir\n[M] Mostrar Nomes\n[S] Sair")
     entrada = input().upper()
     # Condicional enorme
     if (entrada != None and not entrada.isdigit() and entrada != "A" or entrada != "E" or entrada != "S"):
         return entrada
     else:
         print("Insira um valor válido")
-        Retorno_Menu()
+        Menu()
 
-def Varificar_Item_Indice(indice):
+def Check_Index(indice):
     if (indice > -1 and indice <= nomes.__len__()):
-        return True
+        return indice
     else:
-        return False
+        return None
 
-def Retorno_Option_Execute(condition):
+def Option_Execute(condition=None, textoNeg=None):
     """
     Pesquisei o que é callable, achei interessante colocar, pq ele verifica se tal parâmetro é chamável
     Por exemplo, objetos, classes, métodos e propriamente ditas, funções. O que vai ser importante para
     minha abstração.
     """
-    if (not callable(condition) or condition == False): return
 
-    entrada = input().upper()
-    if (entrada == "S" or entrada == "SIM"):
+    input_msg = input().upper()
+    if ((input_msg == "S" or input_msg == "SIM") and callable(condition)):
         condition()
+        return True
+    elif (input_msg == "S" or input_msg == "SIM"):
+        return True
     else:
+        print(textoNeg)
         return False
 
+def Insert_Nota(target):
+    # Carregando Dado
+    print(nomes[target], medias[target])
+    print(f"\nDeseja alterar registro de {nomes[target]}?\nS\\N")
+
+    status = Option_Execute(None, "Saindo")
+    if not status: return
+
+    valor = float(input("Insira a nova nota:\n"))
+
+    if (valor > 0 and valor <= 10):
+        print("Confirme?\nS\\N")
+        Option_Execute(lambda: medias.__setitem__(target, valor), "Cancelado")
+    else:
+        print("Insira uma nota corretamente")
+        Menu()
+
+def Remove_Data(target):
+    # Carregando Dado
+        print(nomes[target], medias[target])
+        print(f"\nDeseja remover {nomes[target]} do registro?\nS\\N")
+    
+        status = Option_Execute(None, "Cancelando")
+        if not status: return
+        nomes.pop(target)
+
 while True:
-    match Retorno_Menu():
+    match Menu():
         case "A":
-            print("Insira o ID:")
-            indice = int(input())
-
-            if (Varificar_Item_Indice(indice)):
-                print(nomes[indice], medias[indice])
-                print("\nDeseja alterar o registro?\nS\\N")
-                # Entrada de entrada do índice, confirmação
-                if (Retorno_Option_Execute(False)):
-                    print("Insira a nova nota")
-                    valor = float(input())
-                    if (valor > 0 and valor <= 10):
-                        print("Confirme?\nS\\N")
-                        # Entrada de nota, confirmação
-                        """
-                        Antes de dizer que só copiei e colei, pesqusei porquê não pode fazer desta forma:
-                            Retorno_Option_Execute(lambda: medias[indice] = valor)
-                        Por algum motivo, Python não deixa, recorri a IA para entender o porquê, a mesma disse
-                        que a palavra chave lambda não aceita atribuições dentro do corpo, fazendo assim eu
-                        falhar tentando atribuir algo, ao invés de criar uma função normalmente (Quebraria
-                        o que eu quero fazer), pesquisei qual era o método mais eficiente, e ela me indicou
-                        o parâmetro __setitem__, indaguei, ela disse que é a mesma coisa que a atribuição que
-                        fiz normalmente, mas ao invés de fazer como uma atribuição, ela faz como um método.
-                        A explicação da IA Abaixo:
-                            # ====================================================================
-                            # NOTA DE DOCUMENTAÇÃO: Por que não usamos 'lambda' comum aqui?
-                            # 
-                            # Erro original: Retorno_Option_Execute(lambda: medias[indice] = valor)
-                            # Motivo: Em Python, lambdas aceitam apenas expressões que retornam valor.
-                            # Atribuições com o sinal '=' são 'statements' (instruções) e proibidas em lambdas.
-                            #
-                            # Solução 1 (Usada): medias.__setitem__(indice, valor)
-                            # Explicação: É o método interno do Python para atribuição. Por ser um método, 
-                            # funciona dentro da lambda.
-                            #
-                            # Solução 2 (Alternativa Padrão):
-                            # def atualizar(): medias[indice] = valor
-                            # Retorno_Option_Execute(atualizar)
-                            # ====================================================================
-
-                        """
-                        Retorno_Option_Execute(lambda: medias.__setitem__(indice, valor))
-                    else:
-                        print("Insira uma nota corretamente")
-                        Retorno_Menu()
-                else:
-                    Retorno_Menu()
-            else:
-                print("Insira um índice válido")
-                Retorno_Menu()
+            target = int(input("Insira o ID:\n"))
+            Insert_Nota(Check_Index(target))
 
         case "E":
             print("E")
+            target = int(input("Insira o ID:\n"))
+            Remove_Data(Check_Index(target))
 
         case "M":
-            Exibir_Alunos()
+            Show_Names()
 
         case "S":
             print("Saindo")
             break
         case _:
-            Retorno_Menu()
+            Menu()
