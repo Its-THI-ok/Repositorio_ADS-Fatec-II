@@ -73,7 +73,6 @@ while True:
             Insert_Nota(Check_Index(target))
 
         case "E":
-            print("E")
             target = int(input("Insira o ID:\n"))
             Remove_Data(Check_Index(target))
 
