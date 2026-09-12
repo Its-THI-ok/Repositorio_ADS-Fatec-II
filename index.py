@@ -3,22 +3,20 @@ nomes = [ "Ana", "Claudia", "Diego", "Diogo", "Elizia", "Fabricio", "Gabriella",
 medias = [ 8.5, 6.0, 4.5, 6.5, 9.5, 5.5, 8.0, 4.0, 9.0, 2.5]
 
 def Show_Names():
-    for nome in nomes:
-        i = nomes.index(nome)
+    for i, nome in enumerate(nomes):
         print("\nID:", i, "\nAluno:\n", nome,"\nMédia:",medias[i],)
 
 def Menu():
     print("Escolhas as opções abaixo\n[A] Alterar\n[E] Excluir\n[M] Mostrar Nomes\n[S] Sair")
     entrada = input().upper()
     # Condicional enorme
-    if (entrada != None and not entrada.isdigit() and entrada != "A" or entrada != "E" or entrada != "S"):
+    if (entrada != None and not entrada.isdigit() and entrada in ["A", "E", "M", "S"]):
         return entrada
     else:
         print("Insira um valor válido")
-        Menu()
 
 def Check_Index(indice):
-    if (indice > -1 and indice <= nomes.__len__()):
+    if (indice > -1 and indice < len(nomes)):
         return indice
     else:
         return None
@@ -40,7 +38,8 @@ def Option_Execute(condition=None, textoNeg=None):
         print(textoNeg)
         return False
 
-def Insert_Nota(target):
+def Insert_Nota(target=-1):
+    if (target == None or not target not in range(0, len(nomes))): return print("Valor fora de índice")
     # Carregando Dado
     print(nomes[target], medias[target])
     print(f"\nDeseja alterar registro de {nomes[target]}?\nS\\N")
@@ -50,21 +49,22 @@ def Insert_Nota(target):
 
     valor = float(input("Insira a nova nota:\n"))
 
-    if (valor > 0 and valor <= 10):
+    if (valor >= 0 and valor <= 10):
         print("Confirme?\nS\\N")
         Option_Execute(lambda: medias.__setitem__(target, valor), "Cancelado")
     else:
         print("Insira uma nota corretamente")
-        Menu()
 
-def Remove_Data(target):
+def Remove_Data(target=-1):
+    if (target == None or target not in range(0, len(nomes))): return print("Valor fora de índice")
     # Carregando Dado
-        print(nomes[target], medias[target])
-        print(f"\nDeseja remover {nomes[target]} do registro?\nS\\N")
-    
-        status = Option_Execute(None, "Cancelando")
-        if not status: return
-        nomes.pop(target)
+    print(nomes[target], medias[target])
+    print(f"\nDeseja remover {nomes[target]} do registro?\nS\\N")
+
+    status = Option_Execute(None, "Cancelando")
+    if not status: return
+    nomes.pop(target)
+    medias.pop(target)
 
 while True:
     match Menu():
@@ -83,4 +83,4 @@ while True:
             print("Saindo")
             break
         case _:
-            Menu()
+            None
