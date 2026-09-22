@@ -7,19 +7,18 @@ def Show_Names():
         print("\nID:", i, "\nAluno:\n", nome,"\nMédia:",medias[i],)
 
 def Menu():
-    print("Escolhas as opções abaixo\n[A] Alterar\n[E] Excluir\n[M] Mostrar Nomes\n[S] Sair")
-    entrada = input().upper()
+    entrada = input("Escolhas as opções abaixo\n[A] Alterar\n[E] Excluir\n[M] Mostrar Nomes\n[S] Sair\n").upper()
     # Condicional enorme
-    if (entrada != None and not entrada.isdigit() and entrada in ["A", "E", "M", "S"]):
-        return entrada
-    else:
+    if (entrada not in ["A", "E", "M", "S"]):
         print("Insira um valor válido")
+    else:
+        return entrada
 
 def Check_Index(indice):
-    if (indice > -1 and indice < len(nomes)):
+    if (indice in range(0, len(nomes))):
         return indice
     else:
-        return None
+        return -1
 
 def Option_Execute(condition=None, textoNeg=None):
     """
@@ -35,33 +34,24 @@ def Option_Execute(condition=None, textoNeg=None):
     elif (input_msg == "S" or input_msg == "SIM"):
         return True
     else:
+        print(textoNeg)
         return False
 
 def Insert_Nota(target=-1):
-    if (target == None or not target not in range(0, len(nomes))): return print("Valor fora de índice")
+    if (not Check_Index(target) >= 0): return print("Valor fora de índice")
     # Carregando Dado
-    print(nomes[target], medias[target])
-    print(f"\nDeseja alterar registro de {nomes[target]}?\nS\\N")
-
-    status = Option_Execute(None, "Saindo")
-    if not status: return
-
+    if not Option_Execute(print(f"{nomes[target]}, {medias[target]}\nDeseja alterar registro de {nomes[target]}?\nS\\N"), "Saindo"): return
     valor = float(input("Insira a nova nota:\n"))
-
-    if (valor >= 0 and valor <= 10):
+    if (valor > 0 or valor < 10):
         print("Confirme?\nS\\N")
         Option_Execute(lambda: medias.__setitem__(target, valor), "Cancelado")
     else:
         print("Insira uma nota corretamente")
 
 def Remove_Data(target=-1):
-    if (target == None or target not in range(0, len(nomes))): return print("Valor fora de índice")
+    if (not Check_Index(target) >= 0): return print("Valor fora de índice")
     # Carregando Dado
-    print(nomes[target], medias[target])
-    print(f"\nDeseja remover {nomes[target]} do registro?\nS\\N")
-
-    status = Option_Execute(None, "Cancelando")
-    if not status: return
+    if not Option_Execute(print(f"{nomes[target]}, {medias[target]}\nDeseja remover {nomes[target]} do registro?\nS\\N"), "Cancelando"): return
     nomes.pop(target)
     medias.pop(target)
 
@@ -70,14 +60,11 @@ while True:
         case "A":
             target = int(input("Insira o ID:\n"))
             Insert_Nota(Check_Index(target))
-
         case "E":
             target = int(input("Insira o ID:\n"))
             Remove_Data(Check_Index(target))
-
         case "M":
             Show_Names()
-
         case "S":
             print("Saindo")
             break
