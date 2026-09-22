@@ -35,7 +35,6 @@ def Option_Execute(condition=None, textoNeg=None):
     elif (input_msg == "S" or input_msg == "SIM"):
         return True
     else:
-        print(textoNeg)
         return False
 
 def Insert_Nota(target=-1):
