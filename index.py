@@ -9,13 +9,13 @@ def Menu():
     else:
         return entrada
 
-def Check_Index(indice):
+def Check_Index(indice:int):
     if (indice in range(0, len(nomes))):
         return indice
     else:
         return -1
 
-def Option_Execute(condition=None, textoNeg=None):
+def Option_Execute(condition:function=None, textoNeg:str=None):
     """
     Pesquisei o que é callable, achei interessante colocar, pq ele verifica se tal parâmetro é chamável
     Por exemplo, objetos, classes, métodos e propriamente ditas, funções. O que vai ser importante para
@@ -26,23 +26,19 @@ def Option_Execute(condition=None, textoNeg=None):
     elif (input_msg == "S" or input_msg == "SIM"): return True
     else: print(textoNeg); return False
 
-def Insert_Nota(target=-1):
+def Insert_Nota(target:int =-1):
     if (not Check_Index(target) >= 0): return print("Valor fora de índice")
     # Carregando Dado
     if not Option_Execute(print(f"{nomes[target]}, {medias[target]}\nDeseja alterar registro de {nomes[target]}?\nS\\N"), "Saindo"): return
     valor = float(input("Insira a nova nota:\n"))
-    if (valor > 0 or valor < 10):
-        print("Confirme?\nS\\N")
-        Option_Execute(lambda: medias.__setitem__(target, valor), "Cancelado")
-    else:
-        print("Insira uma nota corretamente")
+    if (0 <= valor <= 10): print("Confirme?\nS\\N"); Option_Execute(lambda: medias.__setitem__(target, valor), "Cancelado")
+    else: print("Insira uma nota corretamente")
 
-def Remove_Data(target=-1):
+def Remove_Data(target:int =-1):
     if (not Check_Index(target) >= 0): return print("Valor fora de índice")
     # Carregando Dado
     if not Option_Execute(print(f"{nomes[target]}, {medias[target]}\nDeseja remover {nomes[target]} do registro?\nS\\N"), "Cancelando"): return
-    nomes.pop(target)
-    medias.pop(target)
+    nomes.pop(target); medias.pop(target)
 
 while True:
     match Menu():
@@ -57,4 +53,4 @@ while True:
             print("Saindo")
             break
         case _:
-            None
+            print("Escolha algo válido")
