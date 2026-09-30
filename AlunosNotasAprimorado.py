@@ -1,4 +1,6 @@
+# Bibliotecas
 import time, os
+# Variaveis
 Alunos = {
     0: {"nome":"Ana","nota":8.5},
     1: {"nome":"Claudia","nota":6.0},
@@ -74,7 +76,7 @@ def Change_Data_User(indice:int=-1) -> None:
     finally:
         os.system("cls" if os.name =="nt" else "clear")
 
-# Loop
+# Loops
 while True:
     match Menu():
         case "A":
