@@ -2,7 +2,7 @@
 
 def transpose_two_strings(arr):
   returner = ''
-  maxElement = len(arr[0]) if (len(arr[0]) >= len(arr[1])) else len(arr[1])
+  maxElement = Max(arr[0], arr[1])
   limit = 0
   try:
     for i in range(0, maxElement):
