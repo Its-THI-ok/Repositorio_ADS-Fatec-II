@@ -78,6 +78,7 @@ def Change_Data_User(indice:int=-1) -> None:
 
 # Loops
 while True:
+    os.system("cls" if os.name =="nt" else "clear")
     match Menu():
         case "A":
             Change_Data_User(Check_Index())
@@ -94,4 +95,3 @@ while True:
         case _:
             print("Escolha algo válido")
             time.sleep(1)
-            os.system("cls" if os.name =="nt" else "clear")
