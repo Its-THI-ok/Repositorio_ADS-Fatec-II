@@ -1,3 +1,10 @@
+"""
+import sleep from time
+import system from os as cmd
+ai fica só sleep(2) e cmd("cls")
+- MIST
+"""
+
 # Bibliotecas
 import time, os
 # Variaveis
