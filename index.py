@@ -1,54 +1,71 @@
 # Dados
-nomes = [ "Ana", "Claudia", "Diego", "Diogo", "Elizia", "Fabricio", "Gabriella", "Marcelo", "Marcelly", "Tássia" ]
-medias = [ 8.5, 6.0, 4.5, 6.5, 9.5, 5.5, 8.0, 4.0, 9.0, 2.5]
+alunos =  [
+    ["Ana", 8.5],
+    ["Claudia", 6.0],
+    ["Diego", 4.5],
+    ["Diogo", 6.5],
+    ["Elizia", 9.5],
+    ["Fabricio", 5.5],
+    ["Gabriella", 8.0],
+    ["Marcelo", 4.0],
+    ["Marcelly", 9.0],
+    ["Tássia", 2.5]
+]
 
-def Menu():
+def Menu()->str:
     entrada = input("Escolhas as opções abaixo\n[A] Alterar\n[E] Excluir\n[M] Mostrar Nomes\n[S] Sair\n").upper()
     if (entrada not in ["A", "E", "M", "S"]):
         print("Insira um valor válido")
     else:
         return entrada
 
-def Check_Index(indice:int):
-    if (indice in range(0, len(nomes))):
+def Checador_Indice(indice:int)->int:
+    if (indice in range(0, len(alunos))):
         return indice
     else:
         return -1
 
-def Option_Execute(condition:function=None, textoNeg:str=None):
-    """
-    Pesquisei o que é callable, achei interessante colocar, pq ele verifica se tal parâmetro é chamável
-    Por exemplo, objetos, classes, métodos e propriamente ditas, funções. O que vai ser importante para
-    minha abstração.
-    """
+def Opcao_Execute()->bool:
     input_msg = input().upper()
-    if ((input_msg == "S" or input_msg == "SIM") and callable(condition)): condition(); return True
-    elif (input_msg == "S" or input_msg == "SIM"): return True
-    else: print(textoNeg); return False
+    if ((input_msg in ["S", "SI", "SIM"])): 
+        return True
+    else: 
+        return False
 
-def Insert_Nota(target:int =-1):
-    if (not Check_Index(target) >= 0): return print("Valor fora de índice")
+def Inserindo_Nota(target:int =-1)->None:
+    if (not Checador_Indice(target) >= 0): return print("Valor fora de índice")
     # Carregando Dado
-    if not Option_Execute(print(f"{nomes[target]}, {medias[target]}\nDeseja alterar registro de {nomes[target]}?\nS\\N"), "Saindo"): return
-    valor = float(input("Insira a nova nota:\n"))
-    if (0 <= valor <= 10): print("Confirme?\nS\\N"); Option_Execute(lambda: medias.__setitem__(target, valor), "Cancelado")
-    else: print("Insira uma nota corretamente")
+    print(f"{alunos[target][0]}, {alunos[target][1]}\nDeseja alterar registro de {alunos[target][0]}?\nS\\N:")
+    if Opcao_Execute(): 
+        valor = float(input("Insira a nova nota:\n"))
+        while (0 < valor > 10):
+            print("Insira uma nota corretamente")
+            valor = float(input("Insira a nova nota:\n"))
 
-def Remove_Data(target:int =-1):
-    if (not Check_Index(target) >= 0): return print("Valor fora de índice")
+        print("Confirme?\nS\\N")
+        if Opcao_Execute():
+            alunos[target].__setitem__(1, valor)
+        else:
+            print("Cancelando")
+
+def Remove_Data(target:int =-1)->None:
+    if (not Checador_Indice(target) >= 0): return print("Valor fora de índice")
+
+    print(f"{alunos[target][0]}, {alunos[target][1]}\nDeseja remover {alunos[target][0]} do registro?\nS\\N")
+
     # Carregando Dado
-    if not Option_Execute(print(f"{nomes[target]}, {medias[target]}\nDeseja remover {nomes[target]} do registro?\nS\\N"), "Cancelando"): return
-    nomes.pop(target); medias.pop(target)
+    if Opcao_Execute():
+        alunos.pop(target)
 
 while True:
     match Menu():
         case "A":
-            Insert_Nota(Check_Index(int(input("Insira o ID:\n"))))
+            Inserindo_Nota(Checador_Indice(int(input("Insira o ID:\n"))))
         case "E":
-            Remove_Data(Check_Index(int(input("Insira o ID:\n"))))
+            Remove_Data(Checador_Indice(int(input("Insira o ID:\n"))))
         case "M":
-            for i, nome in enumerate(nomes):
-                print("\nID:", i, "\nAluno:\n", nome,"\nMédia:",medias[i],)
+            for i, (nome, media) in enumerate(alunos):
+                print(f"\nID:{i}\nAluno: {nome}\nMédia: {media}")
         case "S":
             print("Saindo")
             break
